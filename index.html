@@ -13,6 +13,7 @@
 	<script src="./js/jquery-3.7.1.min.js"></script>
 	
 	<style type="text/css">
+		/* ---- position ---- */
 		.center {
 			display: block;
 			overflow: hidden;
@@ -32,8 +33,7 @@
 			text-align: center;
 		}
 
-
-		.SlidePointer{
+		.slide-pointer{
 			position: absolute; 
 			top: 85%;
 			left : 80%;
@@ -45,18 +45,16 @@
 			max-height: 100%;
 			background-color: #df9b9e;
 		}
+
 		.flip-card-container {
-			/*box-model*/
 			height:100%;
 			width: 100%;
 		}
 
 		.front, .back{
-			/*display*/
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			/*box-model*/
 			height:100%;
 			width:100%;
 		}
@@ -69,7 +67,7 @@
 		}
 
 
-		/*for flip card*/
+		/* --- for flip card ---- */
 		.card{
 			perspective: 1000px; /* Remove this if you don't want the 3D effect */
 		}
@@ -96,13 +94,13 @@
 			backface-visibility: hidden;
 		}
 
-		/* 動畫 */
+		/* ---- animation ---- */
 
 		.remove-animation {
 			animation: none !important;
 		}
 
-		.SlideRight {
+		.slide-right {
 			animation-name: slide_right;
 			animation-duration: 4s;
 			animation-iteration-count: infinite;
@@ -130,29 +128,27 @@
 					}
 		}
 
-
-
 	</style>
 </head>
 
 <body class="Container" style="background-color: #df9b9e;">
-	<div class="card center fix-ratio"> <!--卡片最外層-->
-		<div class="flip-card-container"><!--包裝卡片正反面的容器-->
-			<div class="front"><!--卡片正面-->
+	<div class="card center fix-ratio">
+		<div class="flip-card-container">
+			<div class="front">
 				<img style="height: 100%" draggable="false" src="./img/front.svg" />
 			</div>
-			<div class="back"><!--卡片反面-->
+			<div class="back">
 				<img style="height: 100%" draggable="false" src="./img/back.svg" />
 			</div>
 		</div>
 	</div>
-	<img id="Pointer" class="SlidePointer SlideRight" draggable="false" src="./img/slide_pointer.svg" />
+	<img id="Pointer" class="slide-pointer slide-right" draggable="false" src="./img/slide_pointer.svg" />
 </body>
 
 <script>
 	var card = document.querySelector(".card");
 	var card_container = document.querySelector(".flip-card-container");
-	var slide_pointer = document.querySelector(".SlidePointer");
+	var slide_pointer = document.querySelector(".slide-pointer");
 
 	slide_pointer.style.top = card.offsetHeight * 0.85
 
@@ -164,31 +160,31 @@
 
 	$(".card").on("mousedown", function(event) {
 		card.style.cursor = 'grabbing';
-		StartRotate(event.clientX);
+		StartFlip(event.clientX);
 	});
 	$(".card").on("touchstart", function(event) {
-		StartRotate(event.touches[0].clientX);
+		StartFlip(event.touches[0].clientX);
 	});
 
 
 	$(".card").on("mousemove", function(event) {
-		DoRotate(event.clientX);
+		FlipCard(event.clientX);
 	});
 	$(".card").on("touchmove", function(event) {
-		DoRotate(event.touches[0].clientX);
+		FlipCard(event.touches[0].clientX);
 	});
 
 	$(".card").on("mouseup", function(event) {
 		card.style.cursor = 'pointer';
-		EndRotate();
+		EndFlip();
 	});
 	$(".card").on("touchend", function(event) {
-		EndRotate();
+		EndFlip();
 	});
 
 	$(".card").on("mouseleave",function (event){
 		card.style.cursor = 'pointer';
-		EndRotate();
+		EndFlip();
 	});
 
 	$(".card").on("mouseenter",function (event){
@@ -196,13 +192,13 @@
 	});
 
 
-	function StartRotate( nStartMouseX ) {
+	function StartFlip( nStartMouseX ) {
 		state = 1;
 		g_nStartMouseX = nStartMouseX;
 		console.log( "g_nStartMouseX: " + g_nStartMouseX );
 	};
 
-	function DoRotate( MouseX ) {
+	function FlipCard( MouseX ) {
 		if( state != 1 && state != 2 ) {
 			return;
 		}
@@ -224,8 +220,9 @@
 			return;
 		}
 
-		$(".SlidePointer")[0].style.display = false
-		$(".SlidePointer")[0].classList.add("remove-animation");
+		// remove animation after flip card
+		$(".slide-pointer")[0].style.display = false
+		$(".slide-pointer")[0].classList.add("remove-animation");
 
 		state = 3;
 		if( nDeltaMouseX > 0 ) {
@@ -239,7 +236,7 @@
 		card_container.style.transform = "rotateY(" + nRotateDeg + "deg)";
 	};
 
-	function EndRotate() {
+	function EndFlip() {
 		state = 0;
 		g_nStartMouseX = undefined;
 	};
