@@ -195,7 +195,6 @@
 	function StartFlip( nStartMouseX ) {
 		state = 1;
 		g_nStartMouseX = nStartMouseX;
-		console.log( "g_nStartMouseX: " + g_nStartMouseX );
 	};
 
 	function FlipCard( MouseX ) {
@@ -214,8 +213,6 @@
 		state = 2;
 		var nDeltaMouseX = MouseX - g_nStartMouseX;
 
-		console.log( "MouseX: " + MouseX + ", nDeltaMouseX: " + nDeltaMouseX );
-
 		if( Math.abs( nDeltaMouseX ) < 100 ) {
 			return;
 		}
@@ -232,7 +229,7 @@
 			nRotateDeg -= 180;
 		}
 
-		console.log( "rotateY(" + nRotateDeg + "deg)" );
+		// flip card
 		card_container.style.transform = "rotateY(" + nRotateDeg + "deg)";
 	};
 
