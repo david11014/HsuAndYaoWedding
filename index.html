@@ -1,0 +1,249 @@
+<html>
+<title>Lutra Sound Bar</title>
+<head>
+	<!--meta data-->
+	<meta property="og:url"                content="https://david11014.github.io/HsuAndYaoWedding/index.html" />
+	<meta property="og:type"               content="website" />
+	<meta property="og:title"              content="Hsu & Yao" />
+	<meta property="og:description"        content="過了十年，我們要結婚了" />
+	<meta property="og:image"              content="https://david11014.github.io/HsuAndYaoWedding/img/meta.png" />
+
+	<!-- 3rd part library -->
+	<!-- jquery -->
+	<script src="./js/jquery-3.7.1.min.js"></script>
+	
+	<style type="text/css">
+		.center {
+			display: block;
+			overflow: hidden;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.fix-ratio{
+			width: 100vw;
+			height: 150vw;
+		}
+
+		.Container{
+			padding: 0;
+			margin: 0;
+			position: relative;
+			text-align: center;
+		}
+
+
+		.SlidePointer{
+			position: absolute; 
+			top: 85%;
+			left : 80%;
+			width: 60px;
+			opacity: 0;
+		}
+
+		.card{
+			max-height: 100%;
+			background-color: #df9b9e;
+		}
+		.flip-card-container {
+			/*box-model*/
+			height:100%;
+			width: 100%;
+		}
+
+		.front, .back{
+			/*display*/
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			/*box-model*/
+			height:100%;
+			width:100%;
+		}
+		.front{
+			background-color: #df9b9e;
+		}
+
+		.back{
+			background-color: #df9b9e;
+		}
+
+
+		/*for flip card*/
+		.card{
+			perspective: 1000px; /* Remove this if you don't want the 3D effect */
+		}
+		.flip-card-container{
+			/*position*/
+			position: relative;
+			/*flip card*/
+			transition: transform 0.7s;
+			transform-style: preserve-3d;
+		}
+
+		.front{
+			/*Position*/
+			position: absolute;
+			/*Flip Card*/
+			backface-visibility: hidden;
+		}
+
+		.back{
+			/*Position*/
+			position: absolute;
+			/*Flip Card*/
+			transform: rotateY(180deg);
+			backface-visibility: hidden;
+		}
+
+		/* 動畫 */
+
+		.remove-animation {
+			animation: none !important;
+		}
+
+		.SlideRight {
+			animation-name: slide_right;
+			animation-duration: 4s;
+			animation-iteration-count: infinite;
+		}
+
+		@keyframes slide_right {
+			0%		{
+						opacity: 0;
+						left : 40%;
+					}
+			10%		{	
+						opacity: 0.8;
+						left : 40%;
+					}
+			20%		{	
+						opacity: 0.8;
+						left : 40%;
+					}
+			95%		{
+						left : 60%;
+					}
+			100%	{
+						opacity: 0;
+						left : 60%;
+					}
+		}
+
+
+
+	</style>
+</head>
+
+<body class="Container" style="background-color: #df9b9e;">
+	<div class="card center fix-ratio"> <!--卡片最外層-->
+		<div class="flip-card-container"><!--包裝卡片正反面的容器-->
+			<div class="front"><!--卡片正面-->
+				<img style="height: 100%" draggable="false" src="./img/front.svg" />
+			</div>
+			<div class="back"><!--卡片反面-->
+				<img style="height: 100%" draggable="false" src="./img/back.svg" />
+			</div>
+		</div>
+	</div>
+	<img id="Pointer" class="SlidePointer SlideRight" draggable="false" src="./img/slide_pointer.svg" />
+</body>
+
+<script>
+	var card = document.querySelector(".card");
+	var card_container = document.querySelector(".flip-card-container");
+	var slide_pointer = document.querySelector(".SlidePointer");
+
+	slide_pointer.style.top = card.offsetHeight * 0.85
+
+	var state = 0;
+	var g_nStartMouseX = undefined;
+	var nRotateDeg = 0;
+	var nDeltaRotateDeg = 0;
+	var isFront = true;
+
+	$(".card").on("mousedown", function(event) {
+		card.style.cursor = 'grabbing';
+		StartRotate(event.clientX);
+	});
+	$(".card").on("touchstart", function(event) {
+		StartRotate(event.touches[0].clientX);
+	});
+
+
+	$(".card").on("mousemove", function(event) {
+		DoRotate(event.clientX);
+	});
+	$(".card").on("touchmove", function(event) {
+		DoRotate(event.touches[0].clientX);
+	});
+
+	$(".card").on("mouseup", function(event) {
+		card.style.cursor = 'pointer';
+		EndRotate();
+	});
+	$(".card").on("touchend", function(event) {
+		EndRotate();
+	});
+
+	$(".card").on("mouseleave",function (event){
+		card.style.cursor = 'pointer';
+		EndRotate();
+	});
+
+	$(".card").on("mouseenter",function (event){
+		card.style.cursor = 'pointer';
+	});
+
+
+	function StartRotate( nStartMouseX ) {
+		state = 1;
+		g_nStartMouseX = nStartMouseX;
+		console.log( "g_nStartMouseX: " + g_nStartMouseX );
+	};
+
+	function DoRotate( MouseX ) {
+		if( state != 1 && state != 2 ) {
+			return;
+		}
+
+		if( typeof MouseX == "undefined" ) {
+			return;
+		}
+
+		if( typeof g_nStartMouseX == "undefined" ) {
+			return;
+		}
+
+		state = 2;
+		var nDeltaMouseX = MouseX - g_nStartMouseX;
+
+		console.log( "MouseX: " + MouseX + ", nDeltaMouseX: " + nDeltaMouseX );
+
+		if( Math.abs( nDeltaMouseX ) < 100 ) {
+			return;
+		}
+
+		$(".SlidePointer")[0].style.display = false
+		$(".SlidePointer")[0].classList.add("remove-animation");
+
+		state = 3;
+		if( nDeltaMouseX > 0 ) {
+			nRotateDeg += 180;
+		}
+		else {
+			nRotateDeg -= 180;
+		}
+
+		console.log( "rotateY(" + nRotateDeg + "deg)" );
+		card_container.style.transform = "rotateY(" + nRotateDeg + "deg)";
+	};
+
+	function EndRotate() {
+		state = 0;
+		g_nStartMouseX = undefined;
+	};
+
+</script>
+
+</html>
