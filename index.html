@@ -14,6 +14,14 @@
 	
 	<style type="text/css">
 		/* ---- position ---- */
+		body {
+			margin:0;
+			padding: 0;
+			position: relative;
+			display: flex;
+	 		align-items: center;
+		}
+
 		.center {
 			display: block;
 			overflow: hidden;
@@ -24,13 +32,6 @@
 		.fix-ratio{
 			width: 100vw;
 			height: 150vw;
-		}
-
-		.Container{
-			padding: 0;
-			margin: 0;
-			position: relative;
-			text-align: center;
 		}
 
 		.slide-pointer{
@@ -131,7 +132,7 @@
 	</style>
 </head>
 
-<body class="Container" style="background-color: #df9b9e;">
+<body style="background-color: #df9b9e;">
 	<div class="card center fix-ratio">
 		<div class="flip-card-container">
 			<div class="front">
